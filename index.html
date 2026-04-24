@@ -1,0 +1,663 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#f7f3ff;--surface:#fff;--card:#fff;
+--nav:#fff;--nborder:#ede8fb;
+--text:#2d2540;--muted:#7b6f99;--faint:#a89fc7;
+--accent:#9b7fe8;--a2:#f9a8d4;--a3:#6ee7b7;--a4:#fcd34d;--a5:#f87171;
+--mono:monospace;--sans:system-ui,sans-serif;
+--r8:8px;--r12:12px;--r16:16px;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.65}
+nav{background:var(--nav);border-bottom:1.5px solid var(--nborder);padding:0 1.2rem;position:sticky;top:0;z-index:50}
+.ni{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;max-width:1000px;margin:0 auto}
+.ni::-webkit-scrollbar{display:none}
+.nl{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;padding:11px 12px 11px 0;margin-right:8px;border-right:1.5px solid var(--nborder);flex-shrink:0}
+.nb{background:none;border:none;border-bottom:2.5px solid transparent;color:var(--muted);font-family:var(--sans);font-size:12px;font-weight:600;padding:11px 10px;cursor:pointer;white-space:nowrap;transition:color 0.15s}
+.nb:hover{color:var(--text)}
+.nb.on{color:var(--accent);border-bottom-color:var(--accent)}
+.sec{display:none;max-width:1000px;margin:0 auto;padding:2rem 1.2rem 4rem}
+.sec.on{display:block}
+.hero{padding:2.5rem 1.2rem 0;max-width:1000px;margin:0 auto;text-align:center}
+.hero h1{font-size:clamp(1.5rem,4vw,2rem);font-weight:700;margin-bottom:8px;color:var(--text)}
+.hero p{color:var(--muted);font-size:13px;max-width:500px;margin:0 auto 2rem}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;max-width:1000px;margin:0 auto;padding:0 1.2rem 3rem}
+.tc{background:#fff;border:1.5px solid var(--nborder);border-radius:var(--r16);padding:1.2rem 1rem;cursor:pointer;transition:border-color 0.15s,transform 0.15s;text-align:center}
+.tc:hover{border-color:var(--accent);transform:translateY(-2px)}
+.tc .ic{font-size:18px;margin-bottom:6px}
+.tc h3{font-size:12px;font-weight:700;margin-bottom:3px;color:var(--text)}
+.tc p{font-size:11px;color:var(--muted)}
+.sh{margin-bottom:1.8rem;padding-bottom:1.2rem;border-bottom:1.5px solid var(--nborder)}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:8px;background:#ede8fb;color:var(--accent)}
+.sh h2{font-size:clamp(1.2rem,3vw,1.6rem);font-weight:700;margin-bottom:5px;color:var(--text)}
+.sh p{color:var(--muted);font-size:13px}
+.lv{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;margin:1.8rem 0 0.8rem}
+.lv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lv-s{color:#34a672}.lv-s .lv-dot{background:#34a672}
+.lv-m{color:#d97706}.lv-m .lv-dot{background:#d97706}
+.lv-p{color:#e05252}.lv-p .lv-dot{background:#e05252}
+.card{background:#fff;border:1.5px solid var(--nborder);border-radius:var(--r16);padding:1.2rem;margin-bottom:10px}
+.card h4{font-size:13px;font-weight:700;margin-bottom:7px;color:var(--text)}
+.card p{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:7px}
+.card p:last-child{margin-bottom:0}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+pre{background:#f4f0ff;border:1.5px solid #ede8fb;border-radius:var(--r12);padding:1rem;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:#3b2e6e;margin:8px 0}
+.cl{font-size:10px;color:var(--muted);margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em}
+.kw{color:#7c3aed}.fn{color:#0369a1}.str{color:#15803d}.cmt{color:#a8a0c8;font-style:italic}.num{color:#b45309}.cls{color:#be185d}
+.tbl{overflow-x:auto;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f4f0ff;color:var(--accent);font-weight:700;text-align:left;padding:7px 10px;font-size:10px;letter-spacing:0.05em;text-transform:uppercase;border-bottom:1.5px solid var(--nborder)}
+td{padding:7px 10px;border-bottom:1px solid #f0eafa;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#faf8ff;color:var(--text)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px}
+.ti{background:#e0f2fe;color:#0369a1}
+.ts{background:#d1fae5;color:#065f46}
+.tw{background:#fef3c7;color:#92400e}
+.td{background:#fee2e2;color:#991b1b}
+.tp{background:#fce7f3;color:#9d174d}
+.tv{background:#ede8fb;color:#5b21b6}
+.flow{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:8px 0}
+.fs{background:#f4f0ff;border:1.5px solid #ede8fb;border-radius:var(--r8);padding:4px 10px;font-size:11px;font-weight:600;white-space:nowrap;color:var(--text)}
+.fa{color:var(--faint);font-size:11px}
+.tip{background:#ede8fb;border-left:3px solid var(--accent);border-radius:0 var(--r8) var(--r8) 0;padding:9px 12px;font-size:12px;color:var(--text);margin:10px 0;line-height:1.6}
+.warn{background:#fff7e6;border-left:3px solid #f59e0b;border-radius:0 var(--r8) var(--r8) 0;padding:9px 12px;font-size:12px;color:var(--text);margin:10px 0;line-height:1.6}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.vc{background:#faf8ff;border:1.5px solid var(--nborder);border-radius:var(--r12);padding:10px}
+.vc h5{font-size:11px;font-weight:700;margin-bottom:7px}
+.vc ul{list-style:none;padding:0}
+.vc ul li{font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid #f0eafa;display:flex;gap:5px}
+.vc ul li:last-child{border-bottom:none}
+.vc ul li::before{content:"→";color:var(--accent);flex-shrink:0}
+.pbox{background:#f4f0ff;border-radius:var(--r12);padding:10px 12px;margin-bottom:8px}
+.pbox strong{color:var(--text);font-size:12px}
+.pbox p{margin-top:4px;font-size:12px}
+@media(max-width:500px){.vs{grid-template-columns:1fr}.tgrid{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<nav>
+  <div class="ni">
+    <div class="nl">🧪 TestNotes</div>
+    <button class="nb on" onclick="show('home',this)">Home</button>
+    <button class="nb" onclick="show('manual',this)">Manual</button>
+    <button class="nb" onclick="show('automation',this)">Automation</button>
+    <button class="nb" onclick="show('selenium',this)">Selenium</button>
+    <button class="nb" onclick="show('playwright',this)">Playwright</button>
+  </div>
+</nav>
+
+<div id="home" class="sec on">
+  <div class="hero">
+    <h1>Software Testing — Scratch to Pro 🌸</h1>
+    <p>Complete revision notes with real code examples. Tap a topic to start.</p>
+  </div>
+  <div class="tgrid">
+    <div class="tc" onclick="go('manual')"><div class="ic">📋</div><h3>Manual Testing</h3><p>SDLC, STLC, test cases, bugs</p></div>
+    <div class="tc" onclick="go('automation')"><div class="ic">⚙️</div><h3>Automation</h3><p>Frameworks, POM, CI/CD</p></div>
+    <div class="tc" onclick="go('selenium')"><div class="ic">🔵</div><h3>Selenium</h3><p>WebDriver, waits, locators</p></div>
+    <div class="tc" onclick="go('playwright')"><div class="ic">🎭</div><h3>Playwright</h3><p>Auto-wait, API, fixtures</p></div>
+    <div class="tc" onclick="go('manual')"><div class="ic">🐛</div><h3>Bug Lifecycle</h3><p>Severity, priority, flow</p></div>
+    <div class="tc" onclick="go('automation')"><div class="ic">🧩</div><h3>Testing Types</h3><p>Unit, E2E, regression</p></div>
+  </div>
+</div>
+
+<div id="manual" class="sec">
+  <div class="sh">
+    <div class="badge">📋 Manual Testing</div>
+    <h2>Manual Testing — Full Notes</h2>
+    <p>Core concepts, types, test cases, bug lifecycle and pro techniques.</p>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Scratch — Core Concepts</div>
+
+  <div class="card">
+    <h4>What is Software Testing?</h4>
+    <p>Software testing is the process of evaluating a system to find defects and verify it meets requirements. The goal is to deliver quality software that works correctly for real users.</p>
+    <div class="tags">
+      <span class="tag tv">Verification — are we building it right?</span>
+      <span class="tag ts">Validation — are we building the right thing?</span>
+      <span class="tag ti">Quality Assurance</span>
+      <span class="tag tp">Bug Detection</span>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <h4>SDLC — Software Development Lifecycle</h4>
+      <div class="flow">
+        <div class="fs">Requirement</div><div class="fa">→</div>
+        <div class="fs">Design</div><div class="fa">→</div>
+        <div class="fs">Development</div><div class="fa">→</div>
+        <div class="fs">Testing</div><div class="fa">→</div>
+        <div class="fs">Deploy</div><div class="fa">→</div>
+        <div class="fs">Maintain</div>
+      </div>
+      <p>Defines how software is planned, built and maintained. In Agile, testing is part of every sprint — not just at the end.</p>
+    </div>
+    <div class="card">
+      <h4>STLC — Software Testing Lifecycle</h4>
+      <div class="flow">
+        <div class="fs">Req Analysis</div><div class="fa">→</div>
+        <div class="fs">Test Planning</div><div class="fa">→</div>
+        <div class="fs">Test Design</div><div class="fa">→</div>
+        <div class="fs">Execution</div><div class="fa">→</div>
+        <div class="fs">Closure</div>
+      </div>
+      <p>QA-specific lifecycle. Entry and exit criteria at each phase ensure quality gates are met before moving forward.</p>
+    </div>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Types of Testing</div>
+
+  <div class="card">
+    <h4>Functional Testing Types</h4>
+    <div class="tbl"><table>
+      <thead><tr><th>Type</th><th>What It Tests</th><th>JioMart Example</th></tr></thead>
+      <tbody>
+        <tr><td>Smoke</td><td>Critical flow works at all</td><td>Can user login and see homepage?</td></tr>
+        <tr><td>Sanity</td><td>Specific fix or feature works</td><td>Does cart count update after add?</td></tr>
+        <tr><td>Regression</td><td>Old features still work after new build</td><td>Does wishlist work after payment update?</td></tr>
+        <tr><td>Functional</td><td>Feature works per requirements</td><td>Does search return correct products?</td></tr>
+        <tr><td>Integration</td><td>Modules interact correctly</td><td>Does order trigger SAP CRM entry?</td></tr>
+        <tr><td>UAT</td><td>End-user acceptance</td><td>Business team validates checkout</td></tr>
+        <tr><td>Exploratory</td><td>Unscripted, free testing</td><td>Tester tries unusual cart inputs</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h4>Non-Functional Testing Types</h4>
+    <div class="tbl"><table>
+      <thead><tr><th>Type</th><th>What It Tests</th><th>Tool</th></tr></thead>
+      <tbody>
+        <tr><td>Performance</td><td>Speed under normal load</td><td>JMeter, k6</td></tr>
+        <tr><td>Load</td><td>Behaviour at expected peak users</td><td>Gatling, JMeter</td></tr>
+        <tr><td>Stress</td><td>Behaviour beyond capacity</td><td>Locust</td></tr>
+        <tr><td>Security</td><td>Vulnerabilities, auth, data exposure</td><td>Burp Suite, OWASP ZAP</td></tr>
+        <tr><td>Compatibility</td><td>Works across browsers/devices</td><td>BrowserStack</td></tr>
+        <tr><td>Accessibility</td><td>Works for users with disabilities</td><td>axe, Lighthouse</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h4>Black Box / White Box / Grey Box</h4>
+    <div class="g2">
+      <div class="pbox">
+        <strong>Black Box Testing</strong>
+        <p>No knowledge of internal code. Tests only inputs and outputs.<br/><span style="color:#0369a1">Example: Enter SKU, verify product appears.</span></p>
+      </div>
+      <div class="pbox">
+        <strong>White Box Testing</strong>
+        <p>Full knowledge of code. Tests internal logic, branches, paths.<br/><span style="color:#065f46">Example: Dev tests every if/else in payment code.</span></p>
+      </div>
+      <div class="pbox">
+        <strong>Grey Box Testing</strong>
+        <p>Partial knowledge — knows APIs, DB schema, not full code.<br/><span style="color:#92400e">Example: QA knows API contract, tests full flow.</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Intermediate — Test Case Writing</div>
+
+  <div class="card">
+    <h4>Real Test Case — JioMart Add to Cart</h4>
+    <div class="tbl"><table>
+      <thead><tr><th>Field</th><th>Details</th></tr></thead>
+      <tbody>
+        <tr><td>Test Case ID</td><td>TC_CART_001</td></tr>
+        <tr><td>Module</td><td>Shopping Cart</td></tr>
+        <tr><td>Title</td><td>Verify adding in-stock product to cart</td></tr>
+        <tr><td>Precondition</td><td>User is logged in, product page is open</td></tr>
+        <tr><td>Steps</td><td>1. Search SKU "JM-9876" → 2. Click product → 3. Click "Add to Cart"</td></tr>
+        <tr><td>Expected Result</td><td>Cart count shows +1, success toast appears</td></tr>
+        <tr><td>Priority</td><td>High</td></tr>
+        <tr><td>Status</td><td>Pass / Fail / Blocked / NA</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Bug Lifecycle and Severity vs Priority</div>
+
+  <div class="g2">
+    <div class="card">
+      <h4>Bug Lifecycle</h4>
+      <div class="flow" style="flex-direction:column;align-items:flex-start;gap:4px">
+        <div class="fs" style="background:#d1fae5;border-color:#6ee7b7;color:#065f46">New</div>
+        <div class="fa" style="margin-left:14px">↓</div>
+        <div class="fs">Assigned → In Progress</div>
+        <div class="fa" style="margin-left:14px">↓</div>
+        <div class="fs">Fixed → Ready for Retest</div>
+        <div class="fa" style="margin-left:14px">↓ pass</div>
+        <div class="fs" style="background:#d1fae5;border-color:#6ee7b7;color:#065f46">Closed</div>
+        <div class="fa" style="margin-left:14px">↓ fail</div>
+        <div class="fs" style="background:#fee2e2;border-color:#fca5a5;color:#991b1b">Reopened</div>
+      </div>
+    </div>
+    <div class="card">
+      <h4>Severity vs Priority</h4>
+      <p>Severity = impact on system. Priority = urgency to fix. They are independent of each other.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Scenario</th><th>Severity</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Payment page crash</td><td style="color:#991b1b">Critical</td><td style="color:#991b1b">High</td></tr>
+          <tr><td>Wrong logo on launch day</td><td style="color:#065f46">Low</td><td style="color:#991b1b">High</td></tr>
+          <tr><td>Typo on About page</td><td style="color:#065f46">Low</td><td style="color:#065f46">Low</td></tr>
+          <tr><td>Data loss on form submit</td><td style="color:#991b1b">Critical</td><td style="color:#991b1b">High</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="lv lv-p"><div class="lv-dot"></div>Pro — Test Design Techniques</div>
+
+  <div class="g2">
+    <div class="card">
+      <h4>Equivalence Partitioning</h4>
+      <p>Divide inputs into valid/invalid partitions. Test one value per partition. Example: Pin code field (6 digits only)</p>
+      <div class="tags">
+        <span class="tag ts">Valid: 400001</span>
+        <span class="tag td">Invalid: 40000 (5 digits)</span>
+        <span class="tag td">Invalid: 4000011 (7 digits)</span>
+        <span class="tag tw">Invalid: ABC123 (letters)</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>Boundary Value Analysis</h4>
+      <p>Test at exact boundaries and just beyond. Age field: 18–60 allowed.</p>
+      <div class="tags">
+        <span class="tag td">17 — below (fail)</span>
+        <span class="tag ts">18 — lower boundary (pass)</span>
+        <span class="tag ts">60 — upper boundary (pass)</span>
+        <span class="tag td">61 — above (fail)</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>Decision Table</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>Logged In</th><th>Cart</th><th>COD Available</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Yes</td><td>Yes</td><td>Yes</td><td style="color:#065f46">Show COD</td></tr>
+          <tr><td>Yes</td><td>Yes</td><td>No</td><td style="color:#92400e">Hide COD</td></tr>
+          <tr><td>No</td><td>Yes</td><td>Yes</td><td style="color:#991b1b">Redirect login</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h4>Good Bug Report</h4>
+      <p><span style="color:var(--accent);font-weight:700">Title:</span> [Module] Short clear description<br/>
+      <span style="color:var(--accent);font-weight:700">Environment:</span> SIT / UAT + build number<br/>
+      <span style="color:var(--accent);font-weight:700">Steps:</span> Numbered reproducible steps<br/>
+      <span style="color:var(--accent);font-weight:700">Expected:</span> What should happen<br/>
+      <span style="color:var(--accent);font-weight:700">Actual:</span> What happened instead<br/>
+      <span style="color:var(--accent);font-weight:700">Attachments:</span> Screenshot, logs, API response</p>
+    </div>
+  </div>
+
+  <div class="tip">Pro tip: In SIT environments like JioMart, always include the SAP CRM transaction ID and API response codes in your bug report — helps devs find root cause in minutes.</div>
+</div>
+
+<div id="automation" class="sec">
+  <div class="sh">
+    <div class="badge">⚙️ Automation Testing</div>
+    <h2>Automation Testing — Full Notes</h2>
+    <p>Strategy, frameworks, CI/CD and what to automate.</p>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Why Automate?</div>
+  <div class="g2">
+    <div class="card">
+      <h4>When to Automate ✅</h4>
+      <div class="tags" style="flex-direction:column;align-items:flex-start">
+        <span class="tag ts">Regression suite every build</span>
+        <span class="tag ts">Repetitive stable scenarios</span>
+        <span class="tag ts">High-volume data-driven tests</span>
+        <span class="tag ts">Cross-browser / cross-device runs</span>
+        <span class="tag ts">Smoke tests on deployment</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>When NOT to Automate ❌</h4>
+      <div class="tags" style="flex-direction:column;align-items:flex-start">
+        <span class="tag td">UI changes frequently</span>
+        <span class="tag td">One-time exploratory tests</span>
+        <span class="tag td">New features still in flux</span>
+        <span class="tag td">Captcha / complex UX validation</span>
+        <span class="tag td">Visual / aesthetic quality checks</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Testing Pyramid</div>
+  <div class="card">
+    <h4>Automation Pyramid</h4>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;margin:10px 0">
+      <div style="background:#fee2e2;border:1.5px solid #fca5a5;border-radius:var(--r8);padding:7px 20px;color:#991b1b;font-size:11px;font-weight:700;width:220px;text-align:center">E2E — Playwright/Selenium — 10%</div>
+      <div style="background:#fef3c7;border:1.5px solid #fcd34d;border-radius:var(--r8);padding:7px 20px;color:#92400e;font-size:11px;font-weight:700;width:300px;text-align:center">Integration / API — Postman/Jest — 30%</div>
+      <div style="background:#d1fae5;border:1.5px solid #6ee7b7;border-radius:var(--r8);padding:7px 20px;color:#065f46;font-size:11px;font-weight:700;width:380px;text-align:center">Unit Tests — Jest / JUnit / PyTest — 60%</div>
+    </div>
+    <p>More unit tests = faster feedback. E2E tests are slowest and most flaky — keep them lean and targeted.</p>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Frameworks</div>
+  <div class="card">
+    <div class="tbl"><table>
+      <thead><tr><th>Framework</th><th>Language</th><th>Best For</th><th>Key Feature</th></tr></thead>
+      <tbody>
+        <tr><td>Selenium</td><td>Java, Python, JS</td><td>Web UI</td><td>Cross-browser, mature</td></tr>
+        <tr><td>Playwright</td><td>JS/TS, Python</td><td>Modern web E2E</td><td>Auto-wait, API testing</td></tr>
+        <tr><td>Cypress</td><td>JavaScript</td><td>Frontend component</td><td>Real-time reload</td></tr>
+        <tr><td>Appium</td><td>Java, Python</td><td>Mobile automation</td><td>iOS + Android</td></tr>
+        <tr><td>Postman/Newman</td><td>JSON/JS</td><td>API testing + CI</td><td>Collections, env vars</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Page Object Model</div>
+  <div class="card">
+    <h4>POM — Separates locators from test logic</h4>
+    <div class="cl">pages/LoginPage.js</div>
+    <pre><span class="kw">class</span> <span class="cls">LoginPage</span> {
+  <span class="fn">constructor</span>(page) {
+    <span class="kw">this</span>.mobileInput = page.<span class="fn">locator</span>(<span class="str">'input[name="mobileNumber"]'</span>);
+    <span class="kw">this</span>.otpInput    = page.<span class="fn">locator</span>(<span class="str">'input[name="otp"]'</span>);
+    <span class="kw">this</span>.submitBtn   = page.<span class="fn">locator</span>(<span class="str">'button[type="submit"]'</span>);
+  }
+  <span class="kw">async</span> <span class="fn">login</span>(mobile, otp) {
+    <span class="kw">await this</span>.mobileInput.<span class="fn">fill</span>(mobile);
+    <span class="kw">await this</span>.submitBtn.<span class="fn">click</span>();
+    <span class="kw">await this</span>.otpInput.<span class="fn">fill</span>(otp);
+    <span class="kw">await this</span>.submitBtn.<span class="fn">click</span>();
+  }
+}
+<span class="cmt">// In test file — clean, no raw selectors</span>
+<span class="kw">await new</span> <span class="cls">LoginPage</span>(page).<span class="fn">login</span>(<span class="str">'9876543210'</span>, <span class="str">'1234'</span>);</pre>
+  </div>
+
+  <div class="lv lv-p"><div class="lv-dot"></div>Pro — CI/CD</div>
+  <div class="g2">
+    <div class="card">
+      <h4>GitHub Actions</h4>
+      <div class="cl">playwright-ci.yml</div>
+      <pre><span class="kw">name</span>: Playwright E2E
+<span class="kw">on</span>: [push, pull_request]
+<span class="kw">jobs</span>:
+  <span class="fn">test</span>:
+    <span class="kw">runs-on</span>: ubuntu-latest
+    <span class="kw">steps</span>:
+      - <span class="fn">uses</span>: actions/checkout@v3
+      - <span class="fn">uses</span>: actions/setup-node@v3
+      - <span class="kw">run</span>: npm ci
+      - <span class="kw">run</span>: npx playwright install
+      - <span class="kw">run</span>: npx playwright test</pre>
+    </div>
+    <div class="card">
+      <h4>Data-Driven Testing</h4>
+      <pre><span class="kw">const</span> products = [
+  { sku: <span class="str">'JM-001'</span>, name: <span class="str">'JioFi Router'</span> },
+  { sku: <span class="str">'JM-002'</span>, name: <span class="str">'Lloyd AC'</span> },
+];
+<span class="kw">for</span> (<span class="kw">const</span> { sku, name } <span class="kw">of</span> products) {
+  test(<span class="str">`Search: ${name}`</span>, <span class="kw">async</span> ({ page }) => {
+    <span class="kw">await</span> page.<span class="fn">fill</span>(<span class="str">'#search'</span>, sku);
+    <span class="kw">await</span> <span class="fn">expect</span>(page).<span class="fn">toContainText</span>(name);
+  });
+}</pre>
+    </div>
+  </div>
+  <div class="tip">Golden rule: A good automation test is Fast, Independent, Repeatable and Self-cleaning. Never depend on test execution order.</div>
+</div>
+
+<div id="selenium" class="sec">
+  <div class="sh">
+    <div class="badge">🔵 Selenium</div>
+    <h2>Selenium WebDriver — Full Notes</h2>
+    <p>Architecture, locators, waits and real Python/Java examples.</p>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Architecture</div>
+  <div class="card">
+    <h4>How Selenium Works</h4>
+    <div class="flow">
+      <div class="fs" style="background:#ede8fb;border-color:#c4b5fd;color:#5b21b6">Test Script</div>
+      <div class="fa">→</div><div class="fs">WebDriver API</div>
+      <div class="fa">→</div><div class="fs">ChromeDriver</div>
+      <div class="fa">→</div>
+      <div class="fs" style="background:#d1fae5;border-color:#6ee7b7;color:#065f46">Chrome Browser</div>
+    </div>
+    <p>Communicates via W3C WebDriver Protocol (HTTP + JSON). ChromeDriver translates commands into native browser calls.</p>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Locators</div>
+  <div class="card">
+    <h4>All Locator Strategies — Java</h4>
+    <pre><span class="cmt">// ID — fastest, prefer when available</span>
+driver.<span class="fn">findElement</span>(By.<span class="fn">id</span>(<span class="str">"username"</span>));
+<span class="cmt">// Name</span>
+driver.<span class="fn">findElement</span>(By.<span class="fn">name</span>(<span class="str">"mobileNumber"</span>));
+<span class="cmt">// CSS Selector — fast and flexible</span>
+driver.<span class="fn">findElement</span>(By.<span class="fn">cssSelector</span>(<span class="str">"input[placeholder='Search']"</span>));
+<span class="cmt">// XPath — when CSS is not enough</span>
+driver.<span class="fn">findElement</span>(By.<span class="fn">xpath</span>(<span class="str">"//button[text()='Add to Cart']"</span>));
+<span class="cmt">// Multiple elements</span>
+List&lt;WebElement&gt; items =
+  driver.<span class="fn">findElements</span>(By.<span class="fn">cssSelector</span>(<span class="str">".product-card"</span>));</pre>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Waits</div>
+  <div class="card">
+    <h4>Three Types of Waits</h4>
+    <div class="g2">
+      <div>
+        <div class="cl" style="color:#e05252">Implicit Wait — avoid</div>
+        <pre><span class="cmt">// Applies globally — masks real issues</span>
+driver.<span class="fn">manage</span>().<span class="fn">timeouts</span>()
+  .<span class="fn">implicitlyWait</span>(<span class="cls">Duration</span>.<span class="fn">ofSeconds</span>(<span class="num">10</span>));</pre>
+      </div>
+      <div>
+        <div class="cl" style="color:#34a672">Explicit Wait — use this</div>
+        <pre><span class="cls">WebDriverWait</span> wait =
+  <span class="kw">new</span> <span class="cls">WebDriverWait</span>(driver,
+    <span class="cls">Duration</span>.<span class="fn">ofSeconds</span>(<span class="num">15</span>));
+wait.<span class="fn">until</span>(
+  <span class="cls">ExpectedConditions</span>
+    .<span class="fn">elementToBeClickable</span>(
+      By.<span class="fn">id</span>(<span class="str">"add-to-cart"</span>)));</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Full Example — Python</div>
+  <div class="card">
+    <h4>Login + Search + Add to Cart</h4>
+    <pre><span class="kw">from</span> selenium <span class="kw">import</span> webdriver
+<span class="kw">from</span> selenium.webdriver.common.by <span class="kw">import</span> By
+<span class="kw">from</span> selenium.webdriver.support.ui <span class="kw">import</span> WebDriverWait
+<span class="kw">from</span> selenium.webdriver.support <span class="kw">import</span> expected_conditions <span class="kw">as</span> EC
+
+driver = webdriver.<span class="cls">Chrome</span>()
+wait  = <span class="cls">WebDriverWait</span>(driver, <span class="num">15</span>)
+<span class="kw">try</span>:
+    driver.<span class="fn">get</span>(<span class="str">"https://www.jiomart.com"</span>)
+    wait.<span class="fn">until</span>(EC.<span class="fn">presence_of_element_located</span>(
+      (By.NAME, <span class="str">"mobileNumber"</span>))).<span class="fn">send_keys</span>(<span class="str">"9876543210"</span>)
+    driver.<span class="fn">find_element</span>(By.XPATH,
+      <span class="str">"//button[@type='submit']"</span>).<span class="fn">click</span>()
+    wait.<span class="fn">until</span>(EC.<span class="fn">visibility_of_element_located</span>(
+      (By.NAME, <span class="str">"otp"</span>))).<span class="fn">send_keys</span>(<span class="str">"1234"</span>)
+    wait.<span class="fn">until</span>(EC.<span class="fn">element_to_be_clickable</span>(
+      (By.CSS_SELECTOR, <span class="str">".product-card:first-child"</span>))).<span class="fn">click</span>()
+    wait.<span class="fn">until</span>(EC.<span class="fn">element_to_be_clickable</span>(
+      (By.ID, <span class="str">"add-to-cart-btn"</span>))).<span class="fn">click</span>()
+    <span class="fn">print</span>(<span class="str">"Product added to cart"</span>)
+<span class="kw">except</span> <span class="cls">Exception</span> <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="str">f"Failed: {e}"</span>)
+<span class="kw">finally</span>:
+    driver.<span class="fn">quit</span>()</pre>
+  </div>
+
+  <div class="lv lv-p"><div class="lv-dot"></div>Pro — Advanced</div>
+  <div class="g2">
+    <div class="card">
+      <h4>Actions Class</h4>
+      <pre><span class="cls">Actions</span> a = <span class="kw">new</span> <span class="cls">Actions</span>(driver);
+a.<span class="fn">moveToElement</span>(menu).<span class="fn">perform</span>();
+a.<span class="fn">dragAndDrop</span>(src, tgt).<span class="fn">perform</span>();
+a.<span class="fn">keyDown</span>(<span class="cls">Keys</span>.CONTROL)
+ .<span class="fn">sendKeys</span>(<span class="str">"a"</span>)
+ .<span class="fn">keyUp</span>(<span class="cls">Keys</span>.CONTROL)
+ .<span class="fn">perform</span>();</pre>
+    </div>
+    <div class="card">
+      <h4>JavaScript Executor</h4>
+      <pre><span class="cls">JavascriptExecutor</span> js =
+  (<span class="cls">JavascriptExecutor</span>) driver;
+js.<span class="fn">executeScript</span>(
+  <span class="str">"arguments[0].click();"</span>, btn);
+js.<span class="fn">executeScript</span>(
+  <span class="str">"arguments[0].scrollIntoView();"</span>, el);
+<span class="cls">String</span> t = (<span class="cls">String</span>)
+  js.<span class="fn">executeScript</span>(<span class="str">"return document.title"</span>);</pre>
+    </div>
+  </div>
+  <div class="warn">StaleElementReferenceException: DOM refreshed after you found the element. Fix: re-locate the element, or use Playwright which handles this automatically.</div>
+</div>
+
+<div id="playwright" class="sec">
+  <div class="sh">
+    <div class="badge">🎭 Playwright</div>
+    <h2>Playwright — Full Notes</h2>
+    <p>Auto-wait, fixtures, API testing, trace viewer and TypeScript-first testing.</p>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Setup</div>
+  <div class="card">
+    <h4>Commands</h4>
+    <pre><span class="cmt"># Create project</span>
+npm init playwright@latest
+npx playwright install
+<span class="cmt"># Run tests</span>
+npx playwright test
+npx playwright test --ui          <span class="cmt"># visual debugger</span>
+npx playwright test --debug       <span class="cmt"># step through</span>
+npx playwright codegen jiomart.com <span class="cmt"># record actions</span>
+npx playwright show-report        <span class="cmt"># HTML report</span></pre>
+  </div>
+
+  <div class="lv lv-s"><div class="lv-dot"></div>Locators</div>
+  <div class="card">
+    <h4>Best Practice Locators</h4>
+    <div class="vs">
+      <div class="vc">
+        <h5 style="color:#065f46">Use these first</h5>
+        <ul>
+          <li>getByRole('button', {name:'Submit'})</li>
+          <li>getByLabel('Mobile Number')</li>
+          <li>getByPlaceholder('Search...')</li>
+          <li>getByTestId('cart-icon')</li>
+          <li>getByText('Add to Cart')</li>
+        </ul>
+      </div>
+      <div class="vc">
+        <h5 style="color:#92400e">Use carefully</h5>
+        <ul>
+          <li>locator('.add-cart-btn')</li>
+          <li>locator('#submit')</li>
+          <li>locator('//button')</li>
+          <li>locator('nth=0')</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="lv lv-m"><div class="lv-dot"></div>Full E2E — JioMart COD Order</div>
+  <div class="card">
+    <h4>Complete Order Placement Test</h4>
+    <pre><span class="kw">import</span> { test, expect } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+test(<span class="str">'Place COD order'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="cmt">// Login with hardcoded OTP (SIT env)</span>
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'https://sit.jiomart.com'</span>);
+  <span class="kw">await</span> page.<span class="fn">getByPlaceholder</span>(<span class="str">'Enter mobile number'</span>).<span class="fn">fill</span>(<span class="str">'9876543210'</span>);
+  <span class="kw">await</span> page.<span class="fn">getByRole</span>(<span class="str">'button'</span>,{name:<span class="str">'Get OTP'</span>}).<span class="fn">click</span>();
+  <span class="kw">await</span> page.<span class="fn">getByPlaceholder</span>(<span class="str">'Enter OTP'</span>).<span class="fn">fill</span>(<span class="str">'1234'</span>);
+  <span class="kw">await</span> page.<span class="fn">getByRole</span>(<span class="str">'button'</span>,{name:<span class="str">'Verify'</span>}).<span class="fn">click</span>();
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">getByTestId</span>(<span class="str">'user-avatar'</span>)).<span class="fn">toBeVisible</span>();
+
+  <span class="cmt">// Search SKU</span>
+  <span class="kw">await</span> page.<span class="fn">getByRole</span>(<span class="str">'searchbox'</span>).<span class="fn">fill</span>(<span class="str">'JM-9876'</span>);
+  <span class="kw">await</span> page.<span class="fn">keyboard</span>.<span class="fn">press</span>(<span class="str">'Enter'</span>);
+
+  <span class="cmt">// Click product → Add to Cart</span>
+  <span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.product-item'</span>).<span class="fn">first</span>().<span class="fn">click</span>();
+  <span class="kw">await</span> page.<span class="fn">getByRole</span>(<span class="str">'button'</span>,{name:<span class="str">'Add to Cart'</span>}).<span class="fn">click</span>();
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">getByTestId</span>(<span class="str">'cart-count'</span>)).<span class="fn">toHaveText</span>(<span class="str">'1'</span>);
+
+  <span class="cmt">// COD Checkout</span>
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/checkout'</span>);
+  <span class="kw">await</span> page.<span class="fn">getByLabel</span>(<span class="str">'Cash on Delivery'</span>).<span class="fn">check</span>();
+  <span class="kw">await</span> page.<span class="fn">getByRole</span>(<span class="str">'button'</span>,{name:<span class="str">'Place Order'</span>}).<span class="fn">click</span>();
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">getByText</span>(<span class="str">'Order Placed Successfully'</span>)).<span class="fn">toBeVisible</span>();
+
+  <span class="cmt">// Capture Order ID for SAP CRM verification</span>
+  <span class="kw">const</span> orderId = <span class="kw">await</span> page.<span class="fn">getByTestId</span>(<span class="str">'order-id'</span>).<span class="fn">textContent</span>();
+  console.<span class="fn">log</span>(<span class="str">`Order ID: ${orderId}`</span>);
+});</pre>
+  </div>
+
+  <div class="lv lv-p"><div class="lv-dot"></div>Pro — Config and Comparison</div>
+  <div class="g2">
+    <div class="card">
+      <h4>playwright.config.ts</h4>
+      <pre><span class="kw">export default</span> <span class="fn">defineConfig</span>({
+  testDir: <span class="str">'./tests'</span>,
+  timeout: <span class="num">30000</span>,
+  retries: <span class="num">1</span>,
+  workers: <span class="num">4</span>,
+  use: {
+    baseURL: <span class="str">'https://sit.jiomart.com'</span>,
+    headless: <span class="kw">true</span>,
+    screenshot: <span class="str">'only-on-failure'</span>,
+    video: <span class="str">'retain-on-failure'</span>,
+    trace: <span class="str">'on-first-retry'</span>,
+  },
+  projects: [
+    { name: <span class="str">'chrome'</span>,
+      use: {...devices[<span class="str">'Desktop Chrome'</span>]} },
+    { name: <span class="str">'mobile'</span>,
+      use: {...devices[<span class="str">'Pixel 7'</span>]} },
+  ]
+});</pre>
+    </div>
+    <div class="card">
+      <h4>Selenium vs Playwright</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>Feature</th><th>Selenium</th><th>Playwright</th></tr></thead>
+        <tbody>
+          <tr><td>Auto-wait</td><td style="color:#e05252">Manual</td><td style="color:#34a672">Built-in</td></tr>
+          <tr><td>API testing</td><td style="color:#e05252">No</td><td style="color:#34a672">Yes</td></tr>
+          <tr><td>Trace viewer</td><td style="color:#e05252">No</td><td style="color:#34a672">Yes</td></tr>
+          <tr><td>Speed</td><td>Moderate</td><td style="color:#34a672">Faster</td></tr>
+          <tr><td>Legacy browsers</td><td style="color:#34a672">Yes (IE)</td><td>Modern only</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="tip">Use page.pause() mid-test during development to inspect the page. After CI failures, open Trace Viewer — it records every action, DOM snapshot and network call like a flight recorder.</div>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  var s=document.getElementById(id);
+  if(s)s.classList.add('on');
+  if(btn)btn.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function go(id){
+  show(id,document.querySelector('.nb[onclick*="'+id+'"]'));
+}
+</script>
